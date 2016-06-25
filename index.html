@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Relay Tick</title>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+  <meta http-equiv='Content-Type' content='text/html; charset=utf8'/>
+  <meta name='apple-mobile-web-app-capable' content='yes'/>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'/>
+  <link rel="stylesheet" type="text/css" href="./styles.css">
+</head>
+<body>
+  <div>
+    <span>Current Time:</span>
+    <span id="current" class="timeclock"></span>
+  </div>
+
+  <div>
+    <span>Set Alarm:</span>
+    <span><select id="hour"></select> Hour</span>
+    <span><select id="minute"></select> Minutes</span>
+    <span><select id="second"></select> Seconds</span>
+  </div>
+
+  <div>
+    <span>Launch Location:</span>
+    <input id="location" type="text" size="50"/>
+  </div>
+
+  <div>
+    <button id="setup">setup</button>
+    <button id="reset">reset</button>
+  </div>
+
+  <div id="remain" class="timeclock"></div>
+
+  <script type="text/javascript" src="./app.js"></script>
+</body>
+</html>
