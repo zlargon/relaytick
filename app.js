@@ -8,8 +8,7 @@ var alarm = {
     location: null,
     current: null,
     remain: null,
-    setup: null,
-    reset: null
+    btn: null
   },
 
   init: function () {
@@ -24,10 +23,9 @@ var alarm = {
     this.ref.location = document.getElementById("location");
     this.ref.current  = document.getElementById("current");
     this.ref.remain   = document.getElementById("remain");
-    this.ref.setup    = document.getElementById("setup");
-    this.ref.reset    = document.getElementById("reset");
+    this.ref.btn      = document.getElementById("btn");
 
-    // 3. insert hour, minure, second options
+    // 3. insert hour, minute, second options
     var t = alarmTime.split(':');   // ["21", "50", "28"]
     for (var i = 0; i < 60; i++) {
       var v = this.pad(i);  // "00" ~ "59"
@@ -42,9 +40,8 @@ var alarm = {
     // 4. setup location
     this.ref.location.value = location;
 
-    // 5. setup setup, reset onclick callback
-    this.ref.setup.onclick = this.setup.bind(this);
-    this.ref.reset.onclick = this.reset.bind(this);
+    // 5. setup btn handler
+    this.ref.btn.onclick = this.btnHander.bind(this);
 
     // 6. start alarm (update rate: 500ms)
     this.start(500);
@@ -74,6 +71,16 @@ var alarm = {
     }
   },
 
+  btnHander: function() {
+    if (this.alarmTime === null) {
+      this.setup();
+      this.ref.btn.innerHTML = 'reset';
+    } else {
+      this.reset();
+      this.ref.btn.innerHTML = 'setup';
+    }
+  },
+
   setup: function () {
     this.alarmTime = [this.ref.hr.value, this.ref.min.value, this.ref.sec.value].join(':');
 
@@ -86,7 +93,6 @@ var alarm = {
     this.ref.min.disabled = true;
     this.ref.sec.disabled = true;
     this.ref.location.disabled = true;
-    this.ref.setup.disabled = true;
 
     // update remain time
     this.updateRemainTime();
@@ -98,7 +104,6 @@ var alarm = {
     this.ref.min.disabled = false;
     this.ref.sec.disabled = false;
     this.ref.location.disabled = false;
-    this.ref.setup.disabled = false;
     this.ref.remain.innerHTML = '';
   },
 
