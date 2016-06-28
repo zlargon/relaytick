@@ -82,10 +82,10 @@ var alarm = {
   btnHander: function() {
     if (this.alarmTime === null) {
       this.setup();
-      this.ref.btn.innerHTML = 'reset';
+      this.ref.btn.innerHTML = 'stop';
     } else {
       this.reset();
-      this.ref.btn.innerHTML = 'setup';
+      this.ref.btn.innerHTML = 'start';
     }
   },
 
