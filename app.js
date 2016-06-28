@@ -43,7 +43,15 @@ var alarm = {
     // 5. setup btn handler
     this.ref.btn.onclick = this.btnHander.bind(this);
 
-    // 6. start alarm (update rate: 500ms)
+    // 6. listen to keypress event
+    document.onkeypress = function (e) {
+      // Enter
+      if (e.keyCode === 13) {
+        this.btnHander();
+      }
+    }.bind(this);
+
+    // 7. start alarm (update rate: 500ms)
     this.start(500);
   },
 
