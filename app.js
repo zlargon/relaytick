@@ -8,13 +8,15 @@ var alarm = {
     location: null,
     current: null,
     remain: null,
-    btn: null
+    btn: null,
+    auto: null
   },
 
   init: function () {
     // 1. local storage (alarm_time, location)
     var alarmTime = localStorage.getItem('alarm_time') || this.getCurrentTime();
     var location  = localStorage.getItem('location')   || 'http://';
+    var auto      = localStorage.getItem('auto') === 'true';
 
     // 2. setup DOM reference
     this.ref.hr       = document.getElementById("hour");
@@ -24,6 +26,7 @@ var alarm = {
     this.ref.current  = document.getElementById("current");
     this.ref.remain   = document.getElementById("remain");
     this.ref.btn      = document.getElementById("btn");
+    this.ref.auto     = document.getElementById("auto");
 
     // 3. insert hour, minute, second options
     var t = alarmTime.split(':');   // ["21", "50", "28"]
@@ -53,6 +56,15 @@ var alarm = {
 
     // 7. start alarm (update rate: 500ms)
     this.start(500);
+
+    // 8. auto checkbox
+    this.ref.auto.checked = auto;
+    this.ref.auto.onchange = function (e) {
+      localStorage.setItem('auto', e.target.checked);
+    };
+    if (auto === true) {
+      this.btnHander();
+    }
   },
 
   start: function (timeval) {
