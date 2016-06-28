@@ -54,8 +54,8 @@ var alarm = {
       }
     }.bind(this);
 
-    // 7. start alarm (update rate: 500ms)
-    this.start(500);
+    // 7. start alarm (update rate: 100ms)
+    this.start(100);
 
     // 8. auto checkbox
     this.ref.auto.checked = auto;
