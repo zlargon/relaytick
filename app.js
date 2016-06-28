@@ -2,14 +2,14 @@ var alarm = {
   id: null,
   alarmTime: null,
   ref: {
-    hr:       document.getElementById("hour"),
-    min:      document.getElementById("minute"),
-    sec:      document.getElementById("second"),
-    location: document.getElementById("location"),
-    current:  document.getElementById("current"),
-    remain:   document.getElementById("remain"),
-    btn:      document.getElementById("btn"),
-    auto:     document.getElementById("auto")
+    hr:       document.getElementById('hour'),
+    min:      document.getElementById('minute'),
+    sec:      document.getElementById('second'),
+    location: document.getElementById('location'),
+    current:  document.getElementById('current'),
+    remain:   document.getElementById('remain'),
+    btn:      document.getElementById('btn'),
+    auto:     document.getElementById('auto')
   },
 
   init: function () {
@@ -60,7 +60,7 @@ var alarm = {
 
   main: function () {
     var ct = this.getCurrentTime();
-    var rt = this.getRemainTime()
+    var rt = this.getRemainTime();
 
     // update current and remain time
     this.ref.current.innerHTML = ct;
