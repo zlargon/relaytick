@@ -2,33 +2,23 @@ var alarm = {
   id: null,
   alarmTime: null,
   ref: {
-    hr: null,
-    min: null,
-    sec: null,
-    location: null,
-    current: null,
-    remain: null,
-    btn: null,
-    auto: null
+    hr:       document.getElementById("hour"),
+    min:      document.getElementById("minute"),
+    sec:      document.getElementById("second"),
+    location: document.getElementById("location"),
+    current:  document.getElementById("current"),
+    remain:   document.getElementById("remain"),
+    btn:      document.getElementById("btn"),
+    auto:     document.getElementById("auto")
   },
 
   init: function () {
-    // 1. local storage (alarm_time, location)
+    // 1. local storage (alarm_time, location, auto)
     var alarmTime = localStorage.getItem('alarm_time') || this.getCurrentTime();
     var location  = localStorage.getItem('location')   || 'http://';
     var auto      = localStorage.getItem('auto') === 'true';
 
-    // 2. setup DOM reference
-    this.ref.hr       = document.getElementById("hour");
-    this.ref.min      = document.getElementById("minute");
-    this.ref.sec      = document.getElementById("second");
-    this.ref.location = document.getElementById("location");
-    this.ref.current  = document.getElementById("current");
-    this.ref.remain   = document.getElementById("remain");
-    this.ref.btn      = document.getElementById("btn");
-    this.ref.auto     = document.getElementById("auto");
-
-    // 3. insert hour, minute, second options
+    // 2. insert hour, minute, second options
     var t = alarmTime.split(':');   // ["21", "50", "28"]
     for (var i = 0; i < 60; i++) {
       var v = this.pad(i);  // "00" ~ "59"
@@ -40,91 +30,67 @@ var alarm = {
       this.ref.sec[i] = new Option(v, v, false, v === t[2]);
     }
 
-    // 4. setup location
+    // 3. setup location
     this.ref.location.value = location;
 
-    // 5. setup btn handler
-    this.ref.btn.onclick = this.btnHander.bind(this);
+    // 4. setup button handler
+    this.ref.btn.onclick = this.submit.bind(this);
 
-    // 6. listen to keypress event
+    // 5. listen to keypress event
     document.onkeypress = function (e) {
       // Enter
       if (e.keyCode === 13) {
-        this.btnHander();
+        this.submit();
       }
     }.bind(this);
 
-    // 7. start alarm (update rate: 100ms)
-    this.start(100);
-
-    // 8. auto checkbox
+    // 6. setup auto checkbox
     this.ref.auto.checked = auto;
     this.ref.auto.onchange = function (e) {
       localStorage.setItem('auto', e.target.checked);
     };
     if (auto === true) {
-      this.btnHander();
+      this.submit();
     }
-  },
 
-  start: function (timeval) {
+    // 7. start time ticker
     this.main();
-    this.id = setInterval(this.main.bind(this), timeval);
-  },
-
-  stop: function () {
-    clearInterval(this.id);
-    this.id = null;
+    this.id = setInterval(this.main.bind(this), 100);   // update rate: 100ms
   },
 
   main: function () {
     var ct = this.getCurrentTime();
-    this.ref.current.innerHTML = ct;  // update current time
+    var rt = this.getRemainTime()
 
-    // update remain time
-    this.updateRemainTime();
+    // update current and remain time
+    this.ref.current.innerHTML = ct;
+    this.ref.remain.innerHTML = rt;
 
-    // if time's up
+    // time is up => change the location
     if (this.alarmTime === ct) {
-      this.stop();
+      clearInterval(this.id);
+      this.id = null;
+
       window.location = this.ref.location.value;
     }
   },
 
-  btnHander: function() {
+  submit: function() {
+    var at = null;
     if (this.alarmTime === null) {
-      this.setup();
-      this.ref.btn.innerHTML = 'stop';
-    } else {
-      this.reset();
-      this.ref.btn.innerHTML = 'start';
+      at = [this.ref.hr.value, this.ref.min.value, this.ref.sec.value].join(':');
+
+      localStorage.setItem('alarm_time', at);
+      localStorage.setItem('location', this.ref.location.value);
     }
-  },
 
-  setup: function () {
-    this.alarmTime = [this.ref.hr.value, this.ref.min.value, this.ref.sec.value].join(':');
-
-    // local storage
-    localStorage.setItem('alarm_time', this.alarmTime);
-    localStorage.setItem('location', this.ref.location.value);
-
-    // disable
-    this.ref.hr.disabled = true;
-    this.ref.min.disabled = true;
-    this.ref.sec.disabled = true;
-    this.ref.location.disabled = true;
-
-    // update remain time
-    this.updateRemainTime();
-  },
-
-  reset: function () {
-    this.alarmTime = null;
-    this.ref.hr.disabled = false;
-    this.ref.min.disabled = false;
-    this.ref.sec.disabled = false;
-    this.ref.location.disabled = false;
-    this.ref.remain.innerHTML = '';
+    this.alarmTime             = at;
+    this.ref.hr.disabled       = at !== null;
+    this.ref.min.disabled      = at !== null;
+    this.ref.sec.disabled      = at !== null;
+    this.ref.location.disabled = at !== null;
+    this.ref.btn.innerHTML     = at !== null ? 'stop' : 'start';
+    this.ref.remain.innerHTML  = this.getRemainTime();
   },
 
   pad: function (n) {
@@ -142,10 +108,9 @@ var alarm = {
     ].join(':');
   },
 
-  updateRemainTime: function () {
+  getRemainTime: function () {
     if (this.alarmTime === null) {
-      this.ref.remain.innerHTML = '';
-      return;
+      return '';
     }
 
     var ct = new Date();
@@ -160,7 +125,7 @@ var alarm = {
     if (h < 0) { h += 24; }
 
     var pad = this.pad;
-    this.ref.remain.innerHTML = [pad(h), pad(m), pad(s)].join(':');
+    return [pad(h), pad(m), pad(s)].join(':');
   }
 };
 
