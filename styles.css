@@ -4,18 +4,23 @@ body {
   font-size: 12px;
 }
 
-body div {
+.root {
+  margin: 40px auto;
+  width: 480px;
+}
+
+.root div {
   margin-bottom: 10px;
 }
 
-body div span:first-child {
+.root div span:first-child {
   display: inline-block;
   width: 150px;
   font-size: 13px;
   background-color: lightyellow;
 }
 
-body span {
+.root span {
   margin-right: 5px;
 }
 
